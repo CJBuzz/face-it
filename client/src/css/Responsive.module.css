@@ -1,0 +1,13 @@
+.responsive-title-mobile {
+  @media (min-width: em(750px)) {
+    display: none;
+  }
+}
+
+.responsive-title-desktop {
+  display: none;
+
+  @media (min-width: em(750px)) {
+    display: block;
+  }
+}

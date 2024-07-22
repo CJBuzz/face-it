@@ -1,0 +1,7 @@
+fastapi==0.111.0
+numpy==1.26.4
+albumentations==1.4.11
+onnxruntime-gpu==1.18.1
+sqlmodel==0.0.19
+voyager==2.0.6
+uvicorn[standard]
