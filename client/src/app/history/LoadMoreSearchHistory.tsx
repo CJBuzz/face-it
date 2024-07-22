@@ -55,7 +55,7 @@ const LoadMoreSearchHistory = ({dateRange}: LoadMoreSearchHistoryProps) => {
     //   }
     // })
 
-    response && setSearchResultsInfo([...searchResultsInfo, ...responseData])
+    response && setSearchResultsInfo([...searchResultsInfo, ...response])
     setNumBatchLoaded((prev) => prev+1)
     if(response.length < batchLoadNum) setShowLoadMore(false)
 

@@ -13,7 +13,7 @@ export const fetchAPI = async ({url, method, body}: APIProps) => {
         method: method}) 
 
     if (body) {
-        request = new Request(url,  {
+        request = new Request(apiUrl + url,  {
             method: method,
             body: JSON.stringify(body),
             headers: {
