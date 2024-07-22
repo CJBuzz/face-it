@@ -1,0 +1,15 @@
+# Environments
+/venv
+
+# Cache
+*__pycache__
+
+# Database Files
+/Images
+*.db
+
+# Misc
+/temp
+
+# Version Control Files
+.gitignore

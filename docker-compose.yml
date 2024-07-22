@@ -1,0 +1,17 @@
+version: '3'
+services:
+  backend:
+    image: server
+    build:
+      context: ./server  # Path to the directory containing FastAPI Dockerfile
+    ports:
+      - "8000:8000"
+    depends_on:
+      - frontend
+
+  frontend:
+    image: client
+    build:
+      context: ./client  # Path to the directory containing Next.js Dockerfile
+    ports:
+      - "3000:3000"

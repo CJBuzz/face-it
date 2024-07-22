@@ -1,0 +1,38 @@
+# Use an official Python runtime as a parent image
+FROM python:3.11-slim
+
+# Set the working directory in the container
+WORKDIR /app
+
+# Install system dependencies
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
+    build-essential \
+    cmake \
+    git \
+    wget \
+    libopencv-dev \
+    pciutils \
+    && rm -rf /var/lib/apt/lists/*
+
+# Copy both requirement files
+COPY requirements-gpu.txt requirements-gpu.txt
+COPY requirements-torch-gpu.txt requirements-torch-gpu.txt
+COPY requirements.txt requirements.txt
+
+# Install Python dependencies based on GPU detection
+COPY check_gpu.sh /
+RUN chmod +x /check_gpu.sh
+RUN /check_gpu.sh
+
+# Copy the rest of the application
+COPY . .
+
+# Set environment variables
+ENV PYTHONUNBUFFERED=1
+
+# Expose port 8000
+EXPOSE 8000
+
+# Command to run the FastAPI application
+CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
