@@ -102,7 +102,7 @@ const page = () => {
   };
 
   const callFetchAPI = async (imgFile: ImgFile, imagesNum: number) => {
-    await fetchAPI({url: `http://127.0.0.1:8000/FR/person?name=${imgFile.name}`, 
+    await fetchAPI({url: `/FR/person?name=${imgFile.name}`, 
       method: "PATCH", 
       body: {
         name: imgFile.name.toUpperCase().replaceAll('%2B', '+'),

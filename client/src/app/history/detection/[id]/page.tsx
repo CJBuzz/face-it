@@ -13,7 +13,7 @@ const page = ({params}: {params: {id: string}}) => {
     const [boundingBoxes, setBoundingBoxes] = useState<BoundingBoxes[] | null>(null)
     const [img, setImg] = useState<string | null>(null)
 
-    const {isPending, responseData} = useAPI({url: `http://127.0.0.1:8000/FR/detection?id=${params.id}`, method: "GET"})
+    const {isPending, responseData} = useAPI({url: `/FR/detection?id=${params.id}`, method: "GET"})
     const imageRef = useRef<HTMLImageElement | null>(null)
 
     const [imageHeights, setImageHeights] = useState<[number, number]>([100, 100])

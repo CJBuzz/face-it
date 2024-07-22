@@ -19,7 +19,7 @@ interface PersonCardProps {
 const PersonCard = ({ bColor, score, name }: PersonCardProps) => {
   const scrollingTextRef = useRef<HTMLParagraphElement | null>(null);
   const [offset, setOffset] = useState<Offset>({ currPX: -5, direction: -1 });
-  const {isPending, responseData} = useAPI({url: `http://127.0.0.1:8000/FR/person?name=${name.replaceAll(' ', '+')}&exact_match=True`, method: "GET"})
+  const {isPending, responseData} = useAPI({url: `/FR/person?name=${name.replaceAll(' ', '+')}&exact_match=True`, method: "GET"})
 
   const imgSrcs : string[] = responseData?.[0]?.images || []
 

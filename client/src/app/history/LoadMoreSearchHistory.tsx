@@ -21,7 +21,7 @@ const LoadMoreSearchHistory = ({dateRange}: LoadMoreSearchHistoryProps) => {
   const [isSubsequentLoadPending, setIsSubsequentLoadPending] = useState<boolean>(false)
   const [showLoadMore, setShowLoadMore] = useState<boolean>(false)
 
-  const url = dateRange ? `http://127.0.0.1:8000/FR/detection?dateRange=${dateRange}&limit=${batchLoadNum}` : `http://127.0.0.1:8000/FR/detection?limit=${batchLoadNum}`
+  const url = dateRange ? `/FR/detection?dateRange=${dateRange}&limit=${batchLoadNum}` : `/FR/detection?limit=${batchLoadNum}`
 
   const {isPending, responseData} = useAPI({url: `${url}`, method: "GET"})
 

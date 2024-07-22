@@ -99,7 +99,7 @@ const page = ({ params }: { params: { name: string } }) => {
     base:"50%"
   })
 
-  const {isPending, responseData} = useAPI({url: `http://127.0.0.1:8000/FR/person?name=${params.name.replaceAll('%2B', '+')}&exact_match=True`, method: "GET"})
+  const {isPending, responseData} = useAPI({url: `/FR/person?name=${params.name.replaceAll('%2B', '+')}&exact_match=True`, method: "GET"})
   const router = useRouter()
 
   useEffect(() => {
@@ -110,7 +110,7 @@ const page = ({ params }: { params: { name: string } }) => {
 
   const callEditFetchAPI = async () => {
     //console.log(imgList)
-    const response = await fetchAPI({url: `http://127.0.0.1:8000/FR/person?name=${apiName}`, 
+    const response = await fetchAPI({url: `/FR/person?name=${apiName}`, 
       method: "PATCH", 
       body: {
         name: name,
@@ -146,7 +146,7 @@ const page = ({ params }: { params: { name: string } }) => {
   };
 
   const handleRemovePersonnel = () => {
-    fetchAPI({url: `http://127.0.0.1:8000/FR/person?name=${apiName}`, 
+    fetchAPI({url: `/FR/person?name=${apiName}`, 
       method: "DELETE"})
     router.push('/database')
   }

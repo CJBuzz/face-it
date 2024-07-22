@@ -21,7 +21,7 @@ const App = () => {
   const imgObjHeight = useMatches({ base: "200", md: "300", xl: "400" })
 
 //   const fetchAPI = async (image_data: string) => {
-//     const request = new Request('http://127.0.0.1:8000/FR/detection',  {
+//     const request = new Request('/FR/detection',  {
 //       method: "POST",
 //       body: JSON.stringify({"image_data": image_data}),
 //       headers: {
@@ -41,7 +41,7 @@ const App = () => {
 // }   
 
   const callFetchAPI = async(image_data: string) => {
-    const url = "http://127.0.0.1:8000/FR/detection"
+    const url = "/FR/detection"
     const method='POST'
     const body = {"image_data": image_data}
     const res_data = await fetchAPI({url, method, body})

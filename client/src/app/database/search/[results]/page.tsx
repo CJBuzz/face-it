@@ -36,7 +36,7 @@ const page = ({ params }: { params: { results: string } }) => {
   const [isSubsequentLoadPending, setIsSubsequentLoadPending] = useState<boolean>(false)
   const [showLoadMore, setShowLoadMore] = useState<boolean>(false)
 
-  const {isPending, responseData} = useAPI({url: `http://127.0.0.1:8000/FR/person?name=${searchName}&limit=${batchLoadNum}`, method: "GET"})
+  const {isPending, responseData} = useAPI({url: `/FR/person?name=${searchName}&limit=${batchLoadNum}`, method: "GET"})
 
   useEffect(() => {
     console.log(responseData)
@@ -58,7 +58,7 @@ const page = ({ params }: { params: { results: string } }) => {
   
   const callFetchAPI = async () => {
     setIsSubsequentLoadPending(true)
-    const response = await fetchAPI({url: `http://127.0.0.1:8000/FR/person?name=${searchName}&limit=${batchLoadNum}&offset=${numBatchLoaded*batchLoadNum}`, 
+    const response = await fetchAPI({url: `/FR/person?name=${searchName}&limit=${batchLoadNum}&offset=${numBatchLoaded*batchLoadNum}`, 
       method: "GET"
     })
 

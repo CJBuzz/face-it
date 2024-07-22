@@ -6,8 +6,10 @@ interface APIProps{
     body?: any
 }
 
+const apiUrl = process.env.NEXT_PUBLIC_API_URL
+
 export const fetchAPI = async ({url, method, body}: APIProps) => {
-    let request = new Request(url, {
+    let request = new Request(apiUrl + url, {
         method: method}) 
 
     if (body) {
