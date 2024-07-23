@@ -63,7 +63,7 @@ const imgFilesReducer = (state: ImgFile[], action: Action): ImgFile[] => {
   }
 };
 
-const page = () => {
+const Page = () => {
   const [imgFiles, dispatch] = useReducer(
     imgFilesReducer,
     initialImgFilesState
@@ -227,4 +227,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default Page;

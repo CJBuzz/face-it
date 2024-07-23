@@ -27,7 +27,7 @@ interface PersonInfoRawResults {
 
 const batchLoadNum = 5
 
-const page = ({ params }: { params: { results: string } }) => {
+const Page = ({ params }: { params: { results: string } }) => {
   const router = useRouter()
   const searchName = params.results.replaceAll('%2B', '+')
 
@@ -40,6 +40,7 @@ const page = ({ params }: { params: { results: string } }) => {
 
   useEffect(() => {
     console.log(responseData)
+    if (isPending) return
 
     if (!isPending && responseData?.length === 0) router.push('/database/not_found')
     
@@ -54,7 +55,7 @@ const page = ({ params }: { params: { results: string } }) => {
     setNumBatchLoaded((prev) => prev+1)
     if(responseData.length < batchLoadNum) setShowLoadMore(false)
     else setShowLoadMore(true)
-  }, [isPending])
+  }, [isPending, responseData])
   
   const callFetchAPI = async () => {
     setIsSubsequentLoadPending(true)
@@ -111,4 +112,4 @@ const page = ({ params }: { params: { results: string } }) => {
   );
 };
 
-export default page;
+export default Page;

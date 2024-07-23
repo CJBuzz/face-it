@@ -4,4 +4,5 @@ albumentations==1.4.11
 onnxruntime-gpu==1.18.1
 sqlmodel==0.0.19
 voyager==2.0.6
+insightface==0.7.3
 uvicorn[standard]

@@ -64,7 +64,6 @@ export const useAPI = ({url, method, body}: APIProps) => {
         const res_data = await fetchAPI({url, method, body})
         setResponseData(res_data)
         setIsPending(false)
-
     }
 
     useEffect(() => {

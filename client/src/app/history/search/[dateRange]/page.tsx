@@ -1,8 +1,8 @@
 import LoadMoreSearchHistory from "../../LoadMoreSearchHistory";
 
-const page = ({params}: {params: {dateRange: string}}) => {
+const Page = ({params}: {params: {dateRange: string}}) => {
   return (
     <LoadMoreSearchHistory dateRange={params.dateRange} />);
 };
 
-export default page;
+export default Page;

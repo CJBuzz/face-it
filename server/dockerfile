@@ -1,29 +1,59 @@
-# Use an official Python runtime as a parent image
-FROM python:3.11-slim
+# Use an official NVIDIA runtime as a parent image
+FROM nvidia/cuda:11.8.0-runtime-ubuntu22.04
 
 # Set the working directory in the container
 WORKDIR /app
 
+# Set time-zone
+ENV LANG="C.UTC-8" LC_ALL='C.UTF-8'
+
+RUN echo 'Etc/UTC' > /etc/timezone \
+    && ln -s /usr/share/zoneinfo/Etc/UTC /etc/localtime
+
+# Downloading NVIDIA CUDA 
+RUN wget https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64/cuda-keyring_1.1-1_all.deb
+RUN dpkg -i cuda-keyring_1.1-1_all.deb
+
 # Install system dependencies
-RUN apt-get update && \
-    apt-get install -y --no-install-recommends \
+RUN apt update -y && apt upgrade -y\
+    -y --no-install-recommends \
     build-essential \
+    cuda-11-8 \ 
+    software-properties-common -y \
+    libcudnn8=8.9.2.26-1+cuda11.8 \ 
+    #python3.11 -y\
+    python3-dev \
+    python3-pip \
+    gcc \
     cmake \
+    clang \
     git \
     wget \
     libopencv-dev \
     pciutils \
-    && rm -rf /var/lib/apt/lists/*
+    && add-apt-repository universe \
+    && rm -rf /var/lib/apt/list/*
 
-# Copy both requirement files
+
+# Installing cuDNN driver
+
+#RUN apt install libcudnn8=8.9.2.26-1+cuda11.8
+#RUN apt -y install libnvrtc
+
+# Copy requirement files and install them
 COPY requirements-gpu.txt requirements-gpu.txt
 COPY requirements-torch-gpu.txt requirements-torch-gpu.txt
-COPY requirements.txt requirements.txt
+#COPY requirements.txt requirements.txt
+
+RUN pip3 install -r requirements-gpu.txt
+RUN pip3 install -r requirements-torch-gpu.txt
+# RUN pip3 install --no-cache-dir -r requirements-gpu.txt
+# RUN pip3 install --no-cache-dir -r requirements-torch-gpu.txt
 
 # Install Python dependencies based on GPU detection
-COPY check_gpu.sh /
-RUN chmod +x /check_gpu.sh
-RUN /check_gpu.sh
+# COPY check_gpu.sh /
+# RUN chmod +x /check_gpu.sh
+# RUN /check_gpu.sh
 
 # Copy the rest of the application
 COPY . .
@@ -35,4 +65,4 @@ ENV PYTHONUNBUFFERED=1
 EXPOSE 8000
 
 # Command to run the FastAPI application
-CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
+CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]py

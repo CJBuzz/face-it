@@ -26,6 +26,7 @@ const LoadMoreSearchHistory = ({dateRange}: LoadMoreSearchHistoryProps) => {
   const {isPending, responseData} = useAPI({url: `${url}`, method: "GET"})
 
   useEffect(() => {
+    if (isPending) return;
     console.log(responseData)
 
     if (!isPending && responseData?.length === 0) router.push('/history/not_found')
@@ -34,10 +35,9 @@ const LoadMoreSearchHistory = ({dateRange}: LoadMoreSearchHistoryProps) => {
     
     setSearchResultsInfo(responseData)
     setNumBatchLoaded((prev) => prev+1)
-    console.log(numBatchLoaded, responseData.length)
     if(responseData.length < batchLoadNum) setShowLoadMore(false)
     else setShowLoadMore(true)
-  }, [isPending])
+  }, [isPending, responseData, router])
   
   const callFetchAPI = async (numBatchLoaded: number) => {
     setIsSubsequentLoadPending(true)

@@ -8,6 +8,11 @@ services:
       - "8000:8000"
     depends_on:
       - frontend
+    deploy:
+      resources:  
+        reservations:
+          devices:
+            - capabilities: [gpu]
 
   frontend:
     image: client
@@ -15,3 +20,4 @@ services:
       context: ./client  # Path to the directory containing Next.js Dockerfile
     ports:
       - "3000:3000"
+

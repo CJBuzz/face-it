@@ -85,7 +85,7 @@ const ImageCarouselSlide = ({
   );
 };
 
-const page = ({ params }: { params: { name: string } }) => {
+const Page = ({ params }: { params: { name: string } }) => {
   const [isEditing, setIsEditing] = useState<boolean>(false);
   const [name, setName] = useState<string>("");
   const [apiName, setApiName] = useState<string>(params.name.replaceAll('%2B', '+'))
@@ -103,10 +103,11 @@ const page = ({ params }: { params: { name: string } }) => {
   const router = useRouter()
 
   useEffect(() => {
+    if (isPending) return
     if (!isPending && responseData?.length === 0) throw Error('404 not found')
     setImgList(responseData?.[0]?.images || [])
     setName(responseData?.[0]?.name || "")
-  }, [isPending])
+  }, [isPending, responseData])
 
   const callEditFetchAPI = async () => {
     //console.log(imgList)
@@ -151,9 +152,9 @@ const page = ({ params }: { params: { name: string } }) => {
     router.push('/database')
   }
 
-  useEffect(() => {
-    console.log(imgList);
-  }, [imgList]);
+  // useEffect(() => {
+  //   console.log(imgList);
+  // }, [imgList]);
 
   return (
     <>
@@ -226,4 +227,4 @@ const page = ({ params }: { params: { name: string } }) => {
   );
 };
 
-export default page;
+export default Page;

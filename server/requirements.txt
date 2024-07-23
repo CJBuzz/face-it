@@ -2,6 +2,7 @@ fastapi==0.111.0
 numpy==1.26.4
 albumentations==1.4.11
 onnxruntime==1.18.1
+insightface==0.7.3
 torch==2.1.2
 torchvision
 sqlmodel==0.0.19

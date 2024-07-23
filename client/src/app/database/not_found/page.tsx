@@ -1,5 +1,5 @@
 import NoResultsFound from "@/components/misc/NoResultsFound";
 
-const page = () => <NoResultsFound />
+const Page = () => <NoResultsFound />
 
-export default page
+export default Page

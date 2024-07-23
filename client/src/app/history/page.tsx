@@ -1,11 +1,11 @@
 import LoadMoreSearchHistory from "./LoadMoreSearchHistory";
 
 
-const page = () => {
+const Page = () => {
 
   return (
     <LoadMoreSearchHistory />
   );
 };
 
-export default page;
+export default Page;

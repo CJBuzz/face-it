@@ -45,16 +45,17 @@ const Results = ({ selected, handleSelect, bboxes }: ResultsProps) => {
           }      
         })
     )  )
-  }, [])
+  }, [bboxes])
 
   useEffect(() => {
+    if (prevSelected === selected) return
     //Have to put into useEffect so that it detects change in selected state when that change is precipitated by clicking on the bounding box of the face in the image
     setTimeout(() => {
       //if selected is 0, it means that the user is closing the hidden persons, so need to check prevSelected to determine the target and scroll there
       handleScroll(selected ? selected-1 : prevSelected - 1);
     }, 400);
     setPrevSelected(selected)
-  }, [selected])
+  }, [selected, prevSelected])
 
   return (
     <ScrollArea

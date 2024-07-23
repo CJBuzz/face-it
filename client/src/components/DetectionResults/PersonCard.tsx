@@ -56,7 +56,7 @@ const PersonCard = ({ bColor, score, name }: PersonCardProps) => {
       <Card.Section>
         {isPending ? <Skeleton h={120} w={110} animate/>: <Carousel height={120} dragFree slideSize="100%" withControls={false}>
           {imgSrcs.map((imgSrc, index) => (
-            <CarouselSlide>
+            <CarouselSlide key={`Carousel Slide ${index}`}>
               <Image
                 key={index}
                 src={ `data:image/jpg;base64, ${imgSrc}`}

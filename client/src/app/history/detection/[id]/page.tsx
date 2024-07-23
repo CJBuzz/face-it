@@ -8,7 +8,7 @@ import { BoundingBoxes } from "@/types/detectionTypes";
 import FaceBoundingBox from "@/components/DetectionResults/BoundingBox";
 import { useAPI } from "@/utils/api";
 
-const page = ({params}: {params: {id: string}}) => {
+const Page = ({params}: {params: {id: string}}) => {
     const [selectedFace, setSelectedFace] = useState<number>(0);
     const [boundingBoxes, setBoundingBoxes] = useState<BoundingBoxes[] | null>(null)
     const [img, setImg] = useState<string | null>(null)
@@ -35,7 +35,7 @@ const page = ({params}: {params: {id: string}}) => {
         setImg(responseData?.[0]?.image_data || '')
         const loadedBBoxes: BoundingBoxes[] = responseData?.[0]?.bboxes
         setBoundingBoxes([...loadedBBoxes])
-      }, [isPending])
+      }, [isPending, responseData])
 
     useLayoutEffect(() => {
         handleResize()
@@ -85,4 +85,4 @@ const page = ({params}: {params: {id: string}}) => {
   );
 };
 
-export default page;
+export default Page;
