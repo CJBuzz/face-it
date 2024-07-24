@@ -14,9 +14,11 @@ RUN echo 'Etc/UTC' > /etc/timezone \
 RUN apt update -y && apt upgrade -y\
     -y --no-install-recommends \
     build-essential 
+    #nvidia-driver-555
 
 # Install backend dependencies
 RUN apt install \
+    #cuda-11-8 -y \ 
     software-properties-common -y \
     libcudnn8=8.9.2.26-1+cuda11.8 \ 
     python3-dev \
@@ -31,12 +33,28 @@ RUN apt install \
     && add-apt-repository universe \
     && rm -rf /var/lib/apt/list/*
 
+# Downloading NVIDIA CUDA 
+# RUN wget https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64/cuda-keyring_1.1-1_all.deb
+# RUN dpkg -i cuda-keyring_1.1-1_all.deb
+# Installing cuDNN driver
+
+#RUN apt install libcudnn8=8.9.2.26-1+cuda11.8
+#RUN apt -y install libnvrtc
+
 # Copy requirement files and install them
 COPY requirements-gpu.txt requirements-gpu.txt
 COPY requirements-torch-gpu.txt requirements-torch-gpu.txt
+#COPY requirements.txt requirements.txt
 
-RUN pip3 install --no-cache-dir -r requirements-gpu.txt
-RUN pip3 install --no-cache-dir -r requirements-torch-gpu.txt
+RUN pip3 install -r requirements-gpu.txt
+RUN pip3 install -r requirements-torch-gpu.txt
+# RUN pip3 install --no-cache-dir -r requirements-gpu.txt
+# RUN pip3 install --no-cache-dir -r requirements-torch-gpu.txt
+
+# Install Python dependencies based on GPU detection
+# COPY check_gpu.sh /
+# RUN chmod +x /check_gpu.sh
+# RUN /check_gpu.sh
 
 # Copy the rest of the application
 COPY . .
