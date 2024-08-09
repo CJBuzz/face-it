@@ -20,9 +20,9 @@ const DatabaseLayout = ({ children }: { children: React.ReactNode }) => {
   const [resultsHeight, setResultsHeight] = useState<number>(1000);
   const router = useRouter();
   const searchBarWidth = useMatches({
-    base:200,
-    sm:300
-  })
+    base: 200,
+    sm: 300,
+  });
 
   useEffect(() => {
     setResultsHeight(window.innerHeight - 140);
@@ -32,7 +32,7 @@ const DatabaseLayout = ({ children }: { children: React.ReactNode }) => {
 
     window.addEventListener("resize", handleResize);
 
-    return () => window.removeEventListener('resize', handleResize)
+    return () => window.removeEventListener("resize", handleResize);
   }, []);
 
   const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
@@ -44,7 +44,10 @@ const DatabaseLayout = ({ children }: { children: React.ReactNode }) => {
   };
 
   const handleSearch = () => {
-    router.push(`/database/search/${inputValue.replaceAll(' ', '+').toUpperCase().trim()}`);
+    if (inputValue.trim() === "") return;
+    router.push(
+      `/database/search/${inputValue.replaceAll(" ", "+").toUpperCase().trim()}`
+    );
   };
 
   return (

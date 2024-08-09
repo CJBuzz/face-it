@@ -11,5 +11,8 @@
 # Misc
 /temp
 
+# Routes Testing
+*.http
+
 # Version Control Files
 .gitignore

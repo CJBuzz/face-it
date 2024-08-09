@@ -208,6 +208,7 @@ class FRManager(BaseManager):
         neighbours, distances = self.vector_index.query(embeddings_list, k=min(k, len(self.vector_index)))
         
         print(len(neighbours), len(distances), len(self.name_list))
+        print(len(self.vector_index), self.name_list)
         print(type(distances[0][0]))
 
         return [dict(face, 

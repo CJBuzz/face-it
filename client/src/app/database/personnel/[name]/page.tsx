@@ -4,6 +4,7 @@ import {
   ActionIcon,
   Box,
   Center,
+  Divider,
   Group,
   Image,
   Overlay,
@@ -14,7 +15,7 @@ import {
   Tooltip,
   useMatches,
 } from "@mantine/core";
-import { IconEdit, IconTrash } from "@tabler/icons-react";
+import { IconEdit, IconSlideshow, IconTrash } from "@tabler/icons-react";
 import { useEffect, useState } from "react";
 
 import "@mantine/carousel/styles.css";
@@ -40,16 +41,15 @@ interface ImageCarouselSlide {
   image_b64: string;
   handleRemoveImage: (value: number) => void;
   isEditing: boolean;
-  carouselSlideHeight: number
+  carouselSlideHeight: number;
 }
-
 
 const ImageCarouselSlide = ({
   idx,
   image_b64,
   handleRemoveImage,
   isEditing,
-  carouselSlideHeight
+  carouselSlideHeight,
 }: ImageCarouselSlide) => {
   const image_url = `data:image/jpg;base64, ${image_b64}`; //For actual use
   //const image_url = image_b64;
@@ -88,41 +88,57 @@ const ImageCarouselSlide = ({
 const Page = ({ params }: { params: { name: string } }) => {
   const [isEditing, setIsEditing] = useState<boolean>(false);
   const [name, setName] = useState<string>("");
-  const [apiName, setApiName] = useState<string>(params.name.replaceAll('%2B', '+'))
+  const [apiName, setApiName] = useState<string>(
+    params.name.replaceAll("%2B", "+")
+  );
   const [imgList, setImgList] = useState<string[]>([]);
 
-  const carouselWidth = useMatches({ xl: 1200, lg: 900, md: 700, sm: 400, base: 250 })
-  const textInputWidth = useMatches({ sm: 300, base: 200 })
+  const carouselWidth = useMatches({
+    xl: 1200,
+    lg: 900,
+    md: 700,
+    sm: 400,
+    base: 250,
+  });
+  const textInputWidth = useMatches({ sm: 300, base: 200 });
   const carouselSlideHeight = useMatches({ md: 300, base: 250 });
   const carouselRelativeSlideSize = useMatches({
     lg: "35%",
-    base:"50%"
-  })
+    base: "50%",
+  });
 
-  const {isPending, responseData} = useAPI({url: `/FR/person?name=${params.name.replaceAll('%2B', '+')}&exact_match=True`, method: "GET"})
-  const router = useRouter()
+  const { isPending, responseData } = useAPI({
+    url: `/FR/person?name=${params.name.replaceAll(
+      "%2B",
+      "+"
+    )}&exact_match=True`,
+    method: "GET",
+  });
+  const router = useRouter();
 
   useEffect(() => {
-    if (isPending) return
-    if (!isPending && responseData?.length === 0) throw Error('404 not found')
-    setImgList(responseData?.[0]?.images || [])
-    setName(responseData?.[0]?.name || "")
-  }, [isPending, responseData])
+    if (isPending) return;
+    if (!isPending && responseData?.length === 0) throw Error("404 not found");
+    setImgList(responseData?.[0]?.images || []);
+    setName(responseData?.[0]?.name || "");
+  }, [isPending, responseData]);
 
   const callEditFetchAPI = async () => {
     //console.log(imgList)
-    const response = await fetchAPI({url: `/FR/person?name=${apiName}`, 
-      method: "PATCH", 
+    const response = await fetchAPI({
+      url: `/FR/person?name=${apiName}`,
+      method: "PATCH",
       body: {
         name: name,
-        images: imgList
-      }})
-    setApiName(response?.name || apiName)
-  }
+        images: imgList,
+      },
+    });
+    setApiName(response?.name || apiName);
+  };
 
   const handleToggleEdit = () => {
     setIsEditing((prev) => !prev);
-    if (isEditing) callEditFetchAPI()
+    if (isEditing) callEditFetchAPI();
   };
 
   const handleRemoveImage = (idx_to_remove: number) => {
@@ -147,10 +163,9 @@ const Page = ({ params }: { params: { name: string } }) => {
   };
 
   const handleRemovePersonnel = () => {
-    fetchAPI({url: `/FR/person?name=${apiName}`, 
-      method: "DELETE"})
-    router.push('/database')
-  }
+    fetchAPI({ url: `/FR/person?name=${apiName}`, method: "DELETE" });
+    router.push("/database");
+  };
 
   // useEffect(() => {
   //   console.log(imgList);
@@ -165,8 +180,10 @@ const Page = ({ params }: { params: { name: string } }) => {
             onChange={(event) => setName(event.currentTarget.value)}
             w={textInputWidth}
           />
+        ) : isPending ? (
+          <Skeleton h={20} w={200} animate />
         ) : (
-          isPending ? <Skeleton h={20} w={200} animate/>: <Title order={5}>{name}</Title>
+          <Title order={5}>{name}</Title>
         )}
         <Box>
           <Tooltip label="Edit">
@@ -180,7 +197,12 @@ const Page = ({ params }: { params: { name: string } }) => {
             </ActionIcon>
           </Tooltip>
           <Tooltip label="Delete">
-            <ActionIcon variant="subtle" color="red" size={40} onClick={handleRemovePersonnel}>
+            <ActionIcon
+              variant="subtle"
+              color="red"
+              size={40}
+              onClick={handleRemovePersonnel}
+            >
               <IconTrash />
             </ActionIcon>
           </Tooltip>
@@ -188,40 +210,54 @@ const Page = ({ params }: { params: { name: string } }) => {
       </Group>
       <Space h={20} />
       <Center>
-        {(isPending ? <Skeleton animate w={carouselWidth} h={300}/>: (isEditing || imgList.length !== 0 ) && <Carousel //CAROUSEL HAS A PROBLEM FOR SOME REASON
-          dragFree
-          slideSize={carouselRelativeSlideSize}
-          slideGap="md"
-          //loop
-          w={carouselWidth}
-        >
-          {imgList.map((img_b64, idx) => (
-            <ImageCarouselSlide
-              key={`Image Carousel Slide ${idx}`}
-              idx={idx}
-              image_b64={img_b64}
-              handleRemoveImage={handleRemoveImage}
-              isEditing={isEditing}
-              carouselSlideHeight={carouselSlideHeight}
-            />
-          ))}
-          {isEditing && (
-            <Carousel.Slide>
-              <Center>
-                <Box w={250} >
-                <ImgDropzone
-                  multiple={true}
-                  setImgFile={handleUpload}
-                  titleText="Upload Photos"
-                  subtitleText={name}
-                  center={true}
-                  h={carouselSlideHeight}
-                />
-                </Box>
-              </Center>
-            </Carousel.Slide>
-          )}
-        </Carousel>)}
+        {isPending ? (
+          <Skeleton animate w={carouselWidth} h={300} />
+        ) : (
+          (isEditing || imgList.length !== 0) && (
+            <Box>
+              <Carousel //CAROUSEL HAS A PROBLEM FOR SOME REASON
+                dragFree
+                slideSize={carouselRelativeSlideSize}
+                slideGap="md"
+                //loop
+                w={carouselWidth}
+              >
+                {imgList.map((img_b64, idx) => (
+                  <ImageCarouselSlide
+                    key={`Image Carousel Slide ${idx}`}
+                    idx={idx}
+                    image_b64={img_b64}
+                    handleRemoveImage={handleRemoveImage}
+                    isEditing={isEditing}
+                    carouselSlideHeight={carouselSlideHeight}
+                  />
+                ))}
+                {isEditing && (
+                  <Carousel.Slide>
+                    <Center>
+                      <Box w={250}>
+                        <ImgDropzone
+                          multiple={true}
+                          setImgFile={handleUpload}
+                          titleText="Upload Photos"
+                          subtitleText={name}
+                          center={true}
+                          h={carouselSlideHeight}
+                        />
+                      </Box>
+                    </Center>
+                  </Carousel.Slide>
+                )}
+              </Carousel>
+              <Divider
+                w={carouselWidth}
+                my="xs"
+                labelPosition="center"
+                label={<IconSlideshow size={20} />}
+              />
+            </Box>
+          )
+        )}
       </Center>
     </>
   );

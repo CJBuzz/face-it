@@ -25,7 +25,7 @@ class PersonnelFR_Update(PersonnelFR_Base):
     """
     Class type for a person, consisting of name and reference images (For receiving updates)
     """
-    new_image: str | None = None
+    new_images: list[str] | None = None
 
 class PersonnelFR_SQL(SQLModel, table=True):
     """
@@ -106,7 +106,7 @@ def add_PersonFR(session: Session, create_person: PersonnelFR_Update, fr_manager
             message='Person with name {} already exists in database! Please choose a different name.'.format(create_person.name)
         )
 
-    if not create_person.images and create_person.new_image: create_person.images = [create_person.new_image]
+    if not create_person.images and create_person.new_images: create_person.images = create_person.new_images
     
     #Convert base64 img data to reference filename to img file
     create_person.images = [save_img_to_file(img, mode=0, name = create_person.name) for img in create_person.images]
@@ -158,21 +158,24 @@ def update_PersonFR(session: Session, name: str, update_person: PersonnelFR_Upda
         ave_embedding = fr_manager.get_average_embeddings(embeddings_list)
 
         print("RESET IMAGES\n", len(embeddings_list))
-    elif update_person.new_image:
+    elif update_person.new_images:
         embeddings_list = np.frombuffer(person_sql.embeddings, dtype=np.float32).reshape((-1,512)) if person_sql.embeddings else np.empty((0, 512), dtype=np.float32)
-        new_img_ref = save_img_to_file(update_person.new_image, mode=0, name=update_person.name)
-        
-        embeds = fr_manager.extract_embeddings(img_filepath=os.path.join(DATABASE_IMGS_DIR, update_person.name, new_img_ref))
-        
-        if len(embeds) == 0:
-            new_embedding = np.empty((0, 512), dtype=np.float32)
-        else:
-            new_embedding = embeds[0]
-            img_list.append(new_img_ref)
-        
-        if embeddings_list.shape[1] != 512 or new_embedding.shape[0] != 512: raise Exception("Embeddings of {} are of incorrect shape!".format(person_sql.name))
+        img_list, new_embeddings_list = fr_manager.extract_embeddings_multi([save_img_to_file(img, mode=0, name=update_person.name) for img in update_person.new_images], os.path.join(DATABASE_IMGS_DIR, update_person.name))
 
-        embeddings_list = np.vstack((embeddings_list, new_embedding))
+        
+        # new_img_ref = save_img_to_file(update_person.new_image, mode=0, name=update_person.name)
+        
+        # embeds = fr_manager.extract_embeddings(img_filepath=os.path.join(DATABASE_IMGS_DIR, update_person.name, new_img_ref))
+        
+        # if len(embeds) == 0:
+        #     new_embedding = np.empty((0, 512), dtype=np.float32)
+        # else:
+        #     new_embedding = embeds[0]
+        #     img_list.append(new_img_ref)
+        
+        if embeddings_list.shape[1] != 512 or new_embeddings_list.shape[1] != 512: raise Exception("Embeddings of {} are of incorrect shape!".format(person_sql.name))
+
+        embeddings_list = np.vstack((embeddings_list, new_embeddings_list))
         ave_embedding = fr_manager.get_average_embeddings(embeddings_list)
         print("ADD IMAGES\n", embeddings_list.shape)
 
@@ -224,7 +227,7 @@ def delete_all_PersonFR(session: Session, fr_manager: FRManager) -> ResponseMess
     session.exec(delete(PersonnelFR_SQL))
     session.commit()
     reset_img_db([0, 1])
-    fr_manager.load_vectors_from_sql([], [])
+    fr_manager.load_vectors_from_sql([], [], reset=True)
 
     return ResponseMessage(
             type=MessageType.success,
