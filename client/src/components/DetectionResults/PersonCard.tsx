@@ -1,9 +1,10 @@
 import { Carousel, CarouselSlide } from "@mantine/carousel";
-import { Box, Card, Image, Skeleton, Text } from "@mantine/core";
+import { Box, Card, Center, Image, Skeleton, Text } from "@mantine/core";
 import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
 
 import "@mantine/carousel/styles.css";
-import {useAPI} from "@/utils/api";
+import { useAPI } from "@/utils/api";
+import { IconPhotoOff } from "@tabler/icons-react";
 
 interface Offset {
   currPX: number;
@@ -19,9 +20,12 @@ interface PersonCardProps {
 const PersonCard = ({ bColor, score, name }: PersonCardProps) => {
   const scrollingTextRef = useRef<HTMLParagraphElement | null>(null);
   const [offset, setOffset] = useState<Offset>({ currPX: -5, direction: -1 });
-  const {isPending, responseData} = useAPI({url: `/FR/person?name=${name.replaceAll(' ', '+')}&exact_match=True`, method: "GET"})
+  const { isPending, responseData } = useAPI({
+    url: `/FR/person?name=${name.replaceAll(" ", "+")}&exact_match=True`,
+    method: "GET",
+  });
 
-  const imgSrcs : string[] = responseData?.[0]?.images || []
+  const imgSrcs: string[] = responseData?.[0]?.images || [];
 
   // useEffect(() => {
   //   console.log(responseData)
@@ -54,20 +58,28 @@ const PersonCard = ({ bColor, score, name }: PersonCardProps) => {
     <Card withBorder bd={`2px solid ${bColor}`} pt={4} w={100}>
       <Text ta="center">{score.toFixed(3)}</Text>
       <Card.Section>
-        {isPending ? <Skeleton h={120} w={110} animate/>: <Carousel height={120} dragFree slideSize="100%" withControls={false}>
-          {imgSrcs.map((imgSrc, index) => (
-            <CarouselSlide key={`Carousel Slide ${index}`}>
-              <Image
-                key={index}
-                src={ `data:image/jpg;base64, ${imgSrc}`}
-                h={120}
-                w={110}
-                fit="cover"
-                alt="Image Failed to Load"
-              />
-            </CarouselSlide>
-          ))}
-        </Carousel>}
+        {isPending ? (
+          <Skeleton h={120} w={110} animate />
+        ) : responseData === 404 ? (
+          <Center h={120}>
+            <IconPhotoOff size={50} />
+          </Center>
+        ) : (
+          <Carousel h={120} dragFree slideSize="100%" withControls={false}>
+            {imgSrcs.map((imgSrc, index) => (
+              <CarouselSlide key={`Carousel Slide ${index}`}>
+                <Image
+                  key={index}
+                  src={`data:image/jpg;base64, ${imgSrc}`}
+                  h={120}
+                  w={110}
+                  fit="cover"
+                  alt="Image Failed to Load"
+                />
+              </CarouselSlide>
+            ))}
+          </Carousel>
+        )}
       </Card.Section>
 
       <Card.Section p={6}>

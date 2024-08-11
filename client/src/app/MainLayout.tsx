@@ -64,7 +64,7 @@ const MainLayout = ({ children }: { children: React.ReactNode }) => {
               className={classes["input-desktop"]}
             />
             <ResponsiveTitle order={3} mobilesize="h5">
-              Facial Recognition Software
+              FACE-IT
             </ResponsiveTitle>
           </Group>
         </Group>

@@ -14,18 +14,21 @@ import { useRouter } from "next/navigation";
 
 import ResponsiveTitle from "@/components/misc/ResponsiveTitle";
 
-import '@mantine/dates/styles.css'
+import "@mantine/dates/styles.css";
 import { DatePickerInput } from "@mantine/dates";
 import { getDateStr } from "@/utils/misc";
 
 const HistoryLayout = ({ children }: { children: React.ReactNode }) => {
-  const [inputValue, setInputValue] = useState<[Date | null, Date | null]>([null, null]);
+  const [inputValue, setInputValue] = useState<[Date | null, Date | null]>([
+    null,
+    null,
+  ]);
   const [resultsHeight, setResultsHeight] = useState<number>(1000);
   const router = useRouter();
   const searchBarWidth = useMatches({
-    base:200,
-    sm:300
-  })
+    base: 200,
+    sm: 300,
+  });
 
   useEffect(() => {
     setResultsHeight(window.innerHeight - 140);
@@ -35,7 +38,7 @@ const HistoryLayout = ({ children }: { children: React.ReactNode }) => {
 
     window.addEventListener("resize", handleResize);
 
-    return () => window.removeEventListener('resize', handleResize)
+    return () => window.removeEventListener("resize", handleResize);
   }, []);
 
   // const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
@@ -47,9 +50,12 @@ const HistoryLayout = ({ children }: { children: React.ReactNode }) => {
   // };
 
   const handleSearch = () => {
-    const dateRange : string | null = (inputValue[0] && inputValue [1]) ? getDateStr(inputValue[0]) + "-" + getDateStr(inputValue[1]) : null
-    dateRange && console.log(dateRange)
-    router.push(`/history/search/${dateRange}`);
+    const dateRange: string | null =
+      inputValue[0] && inputValue[1]
+        ? getDateStr(inputValue[0]) + "-" + getDateStr(inputValue[1])
+        : null;
+    dateRange && console.log(dateRange);
+    dateRange && router.push(`/history/search/${dateRange}`);
   };
 
   return (
@@ -61,7 +67,7 @@ const HistoryLayout = ({ children }: { children: React.ReactNode }) => {
           </ResponsiveTitle>
         </Anchor>
         <DatePickerInput
-          type='range'
+          type="range"
           placeholder="Pick Dates Range"
           w={searchBarWidth}
           leftSection={

@@ -153,7 +153,6 @@ const Page = () => {
       callFetchAPI(groupedImgFile, idx);
     });
     dispatch({ type: "reset" });
-    setImgUploaded([]);
     return;
   };
 

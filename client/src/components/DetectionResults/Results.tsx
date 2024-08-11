@@ -6,13 +6,15 @@ import { BoundingBoxes, PersonResults } from "@/types/detectionTypes";
 interface ResultsProps {
   selected: number;
   handleSelect: (value: number) => void;
-  bboxes: BoundingBoxes[]
+  bboxes: BoundingBoxes[];
 }
 
 const Results = ({ selected, handleSelect, bboxes }: ResultsProps) => {
   const scrollContainerRef = useRef<HTMLDivElement>(null);
-  const [reformattedResults, setReformattedResults] = useState<PersonResults[][]>([])
-  const [prevSelected, setPrevSelected] = useState<number>(selected)
+  const [reformattedResults, setReformattedResults] = useState<
+    PersonResults[][]
+  >([]);
+  const [prevSelected, setPrevSelected] = useState<number>(selected);
 
   const handleScroll = (index: number) => {
     //console.log(index)
@@ -38,24 +40,23 @@ const Results = ({ selected, handleSelect, bboxes }: ResultsProps) => {
 
   useEffect(() => {
     setReformattedResults(
-    bboxes.map((bbox, _idx) => 
-      bbox['names'].map((name, pers_idx) => {
-        return {'probs': bbox['probs'][pers_idx],
-        'name': name
-          }      
+      bboxes.map((bbox, _idx) =>
+        bbox["names"].map((name, pers_idx) => {
+          return { probs: bbox["probs"][pers_idx], name: name };
         })
-    )  )
-  }, [bboxes])
+      )
+    );
+  }, [bboxes]);
 
   useEffect(() => {
-    if (prevSelected === selected) return
+    if (prevSelected === selected) return;
     //Have to put into useEffect so that it detects change in selected state when that change is precipitated by clicking on the bounding box of the face in the image
     setTimeout(() => {
       //if selected is 0, it means that the user is closing the hidden persons, so need to check prevSelected to determine the target and scroll there
-      handleScroll(selected ? selected-1 : prevSelected - 1);
+      handleScroll(selected ? selected - 1 : prevSelected - 1);
     }, 400);
-    setPrevSelected(selected)
-  }, [selected, prevSelected])
+    setPrevSelected(selected);
+  }, [selected, prevSelected]);
 
   return (
     <ScrollArea
@@ -68,15 +69,13 @@ const Results = ({ selected, handleSelect, bboxes }: ResultsProps) => {
       <Group wrap="nowrap">
         {reformattedResults.map((_value, idx) => {
           return (
-            <>
-              <PersonGroup
-                key={`Person Group ${idx + 1}`}
-                curr_selected={selected}
-                id={idx + 1}
-                handleSelect={handleSelect}
-                persGroup = {reformattedResults[idx]}
-              />
-            </>
+            <PersonGroup
+              key={`Person Group ${idx + 1}`}
+              curr_selected={selected}
+              id={idx + 1}
+              handleSelect={handleSelect}
+              persGroup={reformattedResults[idx]}
+            />
           );
         })}
       </Group>

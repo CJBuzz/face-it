@@ -7,7 +7,7 @@ import { ColorSchemeScript, MantineProvider } from "@mantine/core";
 import MainLayout from "./MainLayout";
 
 export const metadata = {
-  title: "Facial Recognition Software",
+  title: "Face-It",
   description:
     "App for Facial Recognition built using Next.js, Mantine UI, FASTAPI, SQLite. FR models used are insightface by deepinsight for feature extraction and Spotify's voyager for K-Nearest Neighbour search.",
 };
